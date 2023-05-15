@@ -21,6 +21,7 @@ public class Scrapper  {
     private static String errorColor = "\u001B[31m";
 
     public static void start() {
+        long start = System.currentTimeMillis();
         Database.getInstance().UpdateDatabase();
             System.out.println("[SCRAPPER]: Scraping...");
             HashMap<String, String> links = Scrapper.getLinks();
@@ -31,6 +32,8 @@ public class Scrapper  {
                     );
                 System.out.println("[SCRAPPER]:"+ entry.getKey() + " scrapped");
         }
+        long end = System.currentTimeMillis();
+        System.out.println("[SCRAPPER] Scraping done in " + (end - start)/1000 + "s");
     }
 
     //METHODS

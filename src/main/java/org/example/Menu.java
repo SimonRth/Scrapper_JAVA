@@ -2,8 +2,6 @@ package org.example;
 
 import java.util.*;
 
-import org.sqlite.core.DB;
-
 public class Menu {
     
     //ATTRIBUTES

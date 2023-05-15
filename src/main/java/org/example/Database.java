@@ -43,16 +43,6 @@ public class Database {
             System.out.println(errorColor + "[DATABASE] Error during database connection \n[ERR] " + ex.getMessage());
         }
     }
-    public void SelectCity(String city){
-        try {
-            PreparedStatement stmt = Database.getInstance().cnx.prepareStatement("SELECT * FROM stations WHERE city = ?");
-            stmt.setString(1, city);
-            stmt.executeQuery();
-            stmt.close();
-        } catch (SQLException e) {
-            System.out.println(errorColor + "[SQL] Failed to select from database:\n[ERROR]" + e.getMessage());
-        }
-    }
 
     //DESTRUCT
 
@@ -99,7 +89,7 @@ public class Database {
         return null;
     }
 
-    //TODO
+    //Queries
 
     public void AddStation(Station station){
         try {

@@ -1,9 +1,5 @@
 package org.example;
 
-import java.util.HashMap;
-
-import javax.xml.crypto.Data;
-
 public class App
 {
     public static void main( String[] args ){
