@@ -3,6 +3,9 @@ package org.example;
 import java.util.ArrayList;
 //UTILS
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 //JSOUP
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -16,6 +19,19 @@ public class Scrapper  {
     private static String url = "https://prix-carburants-info.fr/";
     private static String terminalColor = "\u001B[34m";
     private static String errorColor = "\u001B[31m";
+
+    public static void start() {
+        Database.getInstance().UpdateDatabase();
+            System.out.println("[SCRAPPER]: Scraping...");
+            HashMap<String, String> links = Scrapper.getLinks();
+            for (var entry : links.entrySet()) {
+                Scrapper.getStations(entry.getValue()).forEach(
+                    (station) -> 
+                        Database.getInstance().AddStation(station)
+                    );
+                System.out.println("[SCRAPPER]:"+ entry.getKey() + " scrapped");
+        }
+    }
 
     //METHODS
     public static HashMap<String, String> getLinks(){
@@ -59,8 +75,12 @@ public class Scrapper  {
                         String zipCodeAndCity = informations.select("div.bindpopup").next().select("a").text();
                         address = informations.select("div.bindpopup").next().text().replace(zipCodeAndCity, "");
                         //TODO: Fix this
-                        zipCode = zipCodeAndCity.split(" ")[0];
-                        city = zipCodeAndCity.split(" ")[1];
+                        Pattern p = Pattern.compile("\\d{5}");
+                        Matcher m = p.matcher(zipCodeAndCity);
+                        if (m.find()) {
+                            zipCode = m.group(0);
+                            city = zipCodeAndCity.replace(zipCode, "");
+                        }
                     }
                     if (row.select("td").hasClass("col-2 text-center px-0")) {
                         prices.add(row.text());

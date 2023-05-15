@@ -1,9 +1,13 @@
 package org.example;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class Database {
 
@@ -60,25 +64,46 @@ public class Database {
 
     //METHODS
 
+    public void UpdateDatabase() {
+        String sql_init = readSQLFile("./ressources/init_database.sql");
+        String sql_drop = readSQLFile("./ressources/drop_database.sql");
+        try {
+            Database.getInstance();
+            if (cnx != null) {
+                Statement stmt = cnx.createStatement();
+                stmt.execute(sql_drop);
+                stmt.execute(sql_init);
+            }
+        } catch (Exception e) {
+            System.out.println(errorColor + "[DATABASE] Error during database update \n[ERR] " + e.getMessage());
+        }
+    }
+
+    private String readSQLFile(String SQLFile) {
+        try {
+            String content = new String(Files.readAllBytes(Paths.get(SQLFile)));
+            return content;
+        } catch (IOException e) {
+            System.out.println(errorColor + "[DATABASE] Error during database connection \n[ERR] " + e.getMessage());
+        }
+        return null;
+    }
+
+    //TODO
+
     public void AddStation(Station station){
         try {
-            String gazole = station.carburants.get(0).price;
-            String sp95 = station.carburants.get(1).price;
-            String e10 = station.carburants.get(2).price;
-            String sp98 = station.carburants.get(3).price;
-            String e85 = station.carburants.get(4).price;
-            String gplc = station.carburants.get(5).price;
             PreparedStatement stmt = Database.getInstance().cnx.prepareStatement("INSERT INTO stations (city, brand, stationAddress, zipcode, gazole, sp95, e10, sp98, e85, gplc) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
             stmt.setString(1, station.city);
             stmt.setString(2, station.brand);
             stmt.setString(3, station.address);
             stmt.setString(4, station.zipcode);
-            stmt.setString(5, gazole);
-            stmt.setString(6, sp95);
-            stmt.setString(7, e10);
-            stmt.setString(8, sp98);
-            stmt.setString(9, e85);
-            stmt.setString(10, gplc);
+            stmt.setString(5, station.carburants.get(0).price);
+            stmt.setString(6, station.carburants.get(1).price);
+            stmt.setString(7, station.carburants.get(2).price);
+            stmt.setString(8, station.carburants.get(3).price);
+            stmt.setString(9, station.carburants.get(4).price);
+            stmt.setString(10, station.carburants.get(5).price);
             stmt.executeUpdate();
             stmt.close();
         } catch (SQLException e) {
