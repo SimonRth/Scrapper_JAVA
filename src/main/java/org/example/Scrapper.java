@@ -89,8 +89,7 @@ public class Scrapper  {
                         prices.add(row.text());
                     }
                     if (prices.size() == 6) {
-                        Station station = new Station();
-                        station.addALL(city, brand, address, zipCode, Carburant.convertArrayToObj(prices));
+                        Station station = new Station(city, brand, address, zipCode, Carburant.convertArrayToObj(prices));
                         stations.add(station);
                         prices.clear();
                     }

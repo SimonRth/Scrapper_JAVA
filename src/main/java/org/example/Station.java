@@ -9,8 +9,7 @@ public class Station {
     public String zipcode;
     public ArrayList<Carburant> carburants = new ArrayList<Carburant>();
 
-    //TODO: add constructor
-    public void addALL(String city, String brand, String address, String zipcode, ArrayList<Carburant> carburants) {
+    public Station(String city, String brand, String address, String zipcode, ArrayList<Carburant> carburants) {
         this.city = city;
         this.brand = brand;
         this.address = address;
